@@ -1,0 +1,33 @@
+//script to extract township data from https://indianatownshipassoc.org/directory/
+
+
+var items = document.querySelectorAll(".directory-item");
+var output ="Email^Phone^Address^Township^County^Trustee First Name^Trustee Last Name\n";
+var stringArray=[];//much more efficient than concatenation
+stringArray[0]=output;
+
+for (var i = 0; i< items.length; i++){
+  var item = items[i];
+
+  var firstLayer = item.children[1];
+
+  var keysAndValuesYo = firstLayer.children;
+  output="";
+  for (var j=0; j< keysAndValuesYo.length; j++){
+    var value =keysAndValuesYo[j].children[1].innerText;
+    output += value + "^";
+
+  }
+
+  output = output.slice(0, -1);
+  stringArray.push(output);
+
+
+}
+var csvContent = "data:text/csv;charset=utf-8,";
+stringArray.forEach(function(row) {
+    csvContent += row + "\r\n";
+});
+
+var encodedUri = encodeURI(csvContent);
+window.open(encodedUri);
